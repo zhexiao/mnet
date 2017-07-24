@@ -5,4 +5,4 @@
     -   id: end-of-file-fixer
     -   id: check-json
     -   id: flake8
-        exclude: .*\.py
+        exclude: migrations|.*\.py
