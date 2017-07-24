@@ -25,7 +25,7 @@ SECRET_KEY = '@!$i7&w-(o8=5ipb^i!uzej=ts*#5-fd&3(k^ue^5uz*n_m373'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -122,3 +122,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+##############################
+# rest framework config
+#############################
+REST_FRAMEWORK = {
+    # disable browsable API
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
+}
