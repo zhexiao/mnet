@@ -1,9 +1,9 @@
 """
 本地开发的配置文件
 """
-from mnet.settings import * # noqa
+from mnet.settings import * # NoQA
 
 
-INSTALLED_APPS += [ # noqa
+INSTALLED_APPS += [ # NoQA
     'netflow'
 ]
