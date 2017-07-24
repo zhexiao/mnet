@@ -5,5 +5,5 @@
     -   id: end-of-file-fixer
     -   id: check-json
     -   id: flake8
-        files: .*\.txt
+        files: .*\_dev\.txt
         exclude: (migrations)

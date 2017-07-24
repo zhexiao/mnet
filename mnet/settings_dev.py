@@ -3,7 +3,6 @@
 """
 from mnet.settings import *
 
-
 INSTALLED_APPS += [
     'netflow'
 ]
