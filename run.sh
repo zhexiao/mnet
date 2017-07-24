@@ -6,7 +6,7 @@ type=$1
 app=$2
 
 cmd=""
-runserver="python manage.py runserver 0.0.0.0:8080"
+runserver="python manage.py runserver 0.0.0.0:8000"
 migration_all="python manage.py makemigrations"
 migrate_all="python manage.py migrate"
 
