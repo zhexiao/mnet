@@ -1,0 +1,15 @@
+{
+  "template" : "netflow-*",
+  "settings" : {
+    "index.refresh_interval" : "5s"
+  },
+  "mappings" : {
+    "mnet":{
+      "properties":{
+        "host":{
+          "type": "ip"
+        }
+      }
+    }
+  }
+}
