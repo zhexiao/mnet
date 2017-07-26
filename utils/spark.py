@@ -4,6 +4,7 @@ from pyspark.streaming import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
 import json
 from pprint import pprint
+import socket
 
 
 class SparkStreaming:
@@ -22,6 +23,8 @@ class SparkStreaming:
 
     # 网络数据参数
     protocol_num = [6, 17]
+    input_server_host = '192.168.33.39'
+    input_server_port = 22001
 
     def __init__(self):
         # 创建streaming context
@@ -84,10 +87,39 @@ class SparkStreaming:
         :return:
         """
         for ip, val in result.iteritems():
+            json_data = {
+                'ip': ip,
+                'flows': val[0],
+                'packets': val[1],
+                'bytes': val[2]
+            }
             pprint('+'*50)
-            pprint(ip)
-            pprint(val)
+            pprint(json.dumps(json_data))
             pprint('+' * 50)
+
+            self.tcp_data(json.dumps(json_data))
+
+    def tcp_data(self, json_string):
+        """
+        使用tcp传输数据到input server的logstash
+        :param json_string:
+        :return:
+        """
+        # TCP SOCKET
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        try:
+            sock.connect((self.input_server_host, self.input_server_port))
+            sock.send(json_string)
+        except socket.error:
+            pprint('+' * 50)
+            pprint("cannot use tcp connect to {0}:{1}".format(
+                self.input_server_host,
+                self.input_server_port
+            ))
+            pprint('+' * 50)
+        finally:
+            sock.close()
 
 
 # 运行类

@@ -1,0 +1,24 @@
+{
+  "template" : "ip-stats-*",
+  "settings" : {
+    "index.refresh_interval" : "5s"
+  },
+  "mappings" : {
+    "mnet":{
+      "properties":{
+        "ip":{
+          "type": "ip"
+        },
+        "flows":{
+          "type": "integer"
+        },
+        "packets":{
+          "type": "integer"
+        },
+        "bytes":{
+          "type": "long"
+        }
+      }
+    }
+  }
+}
