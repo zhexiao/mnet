@@ -74,7 +74,7 @@ class SparkStreaming:
             v1[0]+v2[0], v1[1]+v2[1], v1[2]+v2[2]
         ))
 
-        # 然后对数据按时间区间(每30秒)做个大的统计
+        # 然后对每30秒数据每10秒钟统计一次
         p_stats = p_reduced.window(
             self.window_duration, self.slide_duration
         ).reduceByKey(
@@ -99,7 +99,7 @@ class SparkStreaming:
             pprint(json.dumps(json_data))
             pprint('+' * 50)
 
-            # self.send_data(json.dumps(json_data))
+            self.send_data(json.dumps(json_data))
 
     def send_data(self, json_string):
         """
