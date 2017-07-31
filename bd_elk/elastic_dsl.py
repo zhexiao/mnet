@@ -3,7 +3,9 @@ from elasticsearch_dsl import DocType, String, Long
 
 ELASTIC_HOST = "192.168.33.35"
 ELASTIC_PORT = 9200
-connections.create_connection(hosts=[ELASTIC_HOST])
+connections.create_connection(hosts=['{0}:{1}'.format(
+    ELASTIC_HOST, ELASTIC_PORT
+)])
 
 
 class SrcIp(DocType):
