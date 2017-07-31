@@ -6,11 +6,11 @@ ELASTIC_PORT = 9200
 connections.create_connection(hosts=[ELASTIC_HOST])
 
 
-class Logs(DocType):
+class SrcIp(DocType):
     flows = Long()
     bytes = Long()
     packets = Long()
     ip = String()
 
     class Meta:
-        index = 'src-ip-stats-2017.07.27'
+        index = 'src-ip-stats-2017.07.31'
