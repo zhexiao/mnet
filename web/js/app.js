@@ -1,3 +1,5 @@
+var server_host = "http://192.168.33.20:8000"
+
 $(function(){
     generate_chart_1()
     generate_chart_2()
@@ -8,28 +10,76 @@ $(function(){
  */
 function generate_chart_1(){
     var chart_1 = echarts.init($('.chart-1-body')[0]);
-    // 指定图表的配置项和数据
-    var option = {
-        title: {
-            text: 'chart 1'
-        },
-        tooltip: {},
-        legend: {
-            data:['bytes']
-        },
-        xAxis: {
-            data: ["IP1","IP2","IP3","IP4","IP5","IP6"]
-        },
-        yAxis: {},
-        series: [{
-            name: 'bytes',
-            type: 'bar',
-            data: [5, 20, 36, 10, 10, 20]
-        }]
-    };
 
-    // 使用刚指定的配置项和数据显示图表。
-    chart_1.setOption(option);
+
+    $.ajax({
+        url: server_host+'/netflow/src_ip_stats',
+        type: 'get',
+        dataType: 'json'
+    }).done(function(res){
+
+        var option = {
+            title: {
+                text: 'IP请求数据'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {
+                data: ['bytes(KB)', 'flows', 'packets']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    data: res['ip']
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    name: 'bytes+flows'
+                },
+                {
+                    type: 'value',
+                    name: 'packets'
+                }
+            ],
+            series : [
+                {
+                    name: 'bytes(KB)',
+                    type: 'bar',
+                    data: res['bytes']
+                },
+                {
+                    name: 'flows',
+                    type: 'bar',
+                    data: res['flows'],
+                },
+                {
+                    name: 'packets',
+                    type: 'bar',
+                    data: res['packets'],
+                    yAxisIndex: 1
+                },
+            ]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        chart_1.setOption(option);
+        chart_1.on('click', function (params) {
+            console.log(params)
+            window.open('https://www.baidu.com/s?wd=' + encodeURIComponent(params.name));
+        });
+    })
 }
 
 /**
