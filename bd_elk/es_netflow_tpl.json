@@ -7,7 +7,7 @@
     "mnet":{
       "properties":{
         "host":{
-          "type": "ip"
+          "type": "keyword"
         }
       }
     }

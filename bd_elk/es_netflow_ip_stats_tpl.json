@@ -7,13 +7,13 @@
     "mnet":{
       "properties":{
         "ip":{
-          "type": "ip"
+          "type": "keyword"
         },
         "flows":{
-          "type": "integer"
+          "type": "long"
         },
         "packets":{
-          "type": "integer"
+          "type": "long"
         },
         "bytes":{
           "type": "long"
