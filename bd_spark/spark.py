@@ -14,8 +14,8 @@ class SparkStreaming:
     slide_duration = 5*2
 
     # 定义初始化需要的参数
-    spark_master = "spark://192.168.33.32:7077"
-    zookeeper_host = '192.168.33.31:2181'
+    spark_master = "spark://192.168.9.196:7077"
+    zookeeper_host = '192.168.9.198:2181'
     group_id = 'spark-consumer'
     topics = {
         'mnet': 1
@@ -23,12 +23,17 @@ class SparkStreaming:
 
     # 网络数据参数
     protocol_num = [6, 17]
-    input_server_host = '192.168.33.39'
     udp_buffer_size = 1024
-    input_server_src_ip_port = 21561
-    input_server_dst_ip_port = 21562
-    input_server_src_ip_addr = (input_server_host, input_server_src_ip_port)
-    input_server_dst_ip_addr = (input_server_host, input_server_dst_ip_port)
+
+    logstash_server_host = '192.168.9.197'
+    logstash_server_src_ip_port = 21561
+    logstash_server_dst_ip_port = 21562
+    logstash_server_src_ip_addr = (
+        logstash_server_host, logstash_server_src_ip_port
+    )
+    logstash_server_dst_ip_addr = (
+        logstash_server_host, logstash_server_dst_ip_port
+    )
 
     def __init__(self):
         # 创建streaming context
@@ -153,14 +158,9 @@ class SparkStreaming:
         """
         udp_socket = socket(AF_INET, SOCK_DGRAM)
         try:
-            udp_socket.sendto(json_string, self.input_server_src_ip_addr)
+            udp_socket.sendto(json_string, self.logstash_server_src_ip_addr)
         except socket.error:
-            pprint('+' * 50)
-            pprint("cannot connect to {0}:{1}".format(
-                self.input_server_host,
-                self.input_server_src_ip_port
-            ))
-            pprint('+' * 50)
+            pprint("cannot connect to udp server")
         finally:
             udp_socket.close()
 
@@ -172,14 +172,9 @@ class SparkStreaming:
         """
         udp_socket = socket(AF_INET, SOCK_DGRAM)
         try:
-            udp_socket.sendto(json_string, self.input_server_dst_ip_addr)
+            udp_socket.sendto(json_string, self.logstash_server_dst_ip_addr)
         except socket.error:
-            pprint('+' * 50)
-            pprint("cannot connect to {0}:{1}".format(
-                self.input_server_host,
-                self.input_server_dst_ip_port
-            ))
-            pprint('+' * 50)
+            pprint("cannot connect to udp server")
         finally:
             udp_socket.close()
 
