@@ -70,5 +70,6 @@
 sendfile off;
 root /vagrant/mnet/web;
 ------
+
 > sudo service nginx restart
 ```
