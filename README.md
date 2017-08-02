@@ -2,6 +2,11 @@
 
 ## 后端
 
+#### 安装memcached
+```
+> sudo apt-get install memcached
+```
+
 #### 安装Mysql mysqlclient必备的依赖
 ```
 > sudo apt-get install libmysqlclient-dev

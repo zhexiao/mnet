@@ -13,14 +13,14 @@ function generate_chart_1(){
 
 
     $.ajax({
-        url: server_host+'/netflow/src_ip_stats',
+        url: server_host+'/netflow/ip_stats?type=src',
         type: 'get',
         dataType: 'json'
     }).done(function(res){
 
         var option = {
             title: {
-                text: 'IP请求数据'
+                text: 'Src IP数据'
             },
             tooltip: {
                 trigger: 'axis',
@@ -46,7 +46,7 @@ function generate_chart_1(){
             yAxis: [
                 {
                     type: 'value',
-                    name: 'bytes+flows'
+                    name: 'bytes, flows'
                 },
                 {
                     type: 'value',
@@ -76,8 +76,7 @@ function generate_chart_1(){
         // 使用刚指定的配置项和数据显示图表。
         chart_1.setOption(option);
         chart_1.on('click', function (params) {
-            console.log(params)
-            window.open('https://www.baidu.com/s?wd=' + encodeURIComponent(params.name));
+            window.location.href="ip_details.html?ip="+encodeURIComponent(params.name)
         });
     })
 }

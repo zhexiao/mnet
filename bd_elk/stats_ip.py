@@ -1,0 +1,135 @@
+# -*- coding: UTF-8 -*-
+from elasticsearch_dsl import DocType, Keyword, Long
+from bd_elk.common_doc import CommonDoc
+from django.core.cache import cache
+
+
+class CommonIp(object):
+    # todo should use pandas to do json format
+    """
+    Common Ip Func
+    """
+
+    local_pc_ip = ['10.0.2.15', '10.0.2.3']
+
+    @classmethod
+    def search_all(cls):
+        """
+        search all docs
+        :return:
+        """
+        s = cls.search()
+        response = s.scan()
+        print(cls.to_json_string(s.to_dict()))
+        print('Total %d hits found.' % s.count())
+        for h in response:
+            print(h.to_dict())
+
+    @classmethod
+    def get_stats(cls, **kwargs):
+        """
+        get ip stats
+        :return:
+        """
+        type = kwargs.get('type')
+
+        cache_key = 'ip-stats-{0}'.format(type)
+        json_res = cache.get(cache_key)
+
+        if not json_res:
+            s = cls.search()
+            s.aggs.bucket('ip_terms', 'terms', field='ip.keyword',
+                          exclude=cls.local_pc_ip)
+            s.aggs['ip_terms'].metric('flows_per_ip', 'sum', field='flows')
+            s.aggs['ip_terms'].metric('bytes_per_ip', 'sum', field='bytes')
+            s.aggs['ip_terms'].metric('packets_per_ip', 'sum', field='packets')
+
+            # cls.debug_query(s)
+            response = s.execute()
+
+            json_res = {'ip': [], 'flows': [], 'bytes': [], 'packets': []}
+            for stats in response.aggregations.ip_terms.buckets:
+                json_res['ip'].append(stats.key)
+                json_res['flows'].append(stats.flows_per_ip.value)
+                json_res['bytes'].append(
+                    cls.bytes_convert(stats.bytes_per_ip.value, 'kb')
+                )
+                json_res['packets'].append(stats.packets_per_ip.value)
+
+            cache.set(cache_key, json_res)
+
+        return json_res
+
+    @classmethod
+    def get_date_record(cls, **kwargs):
+        """
+        get ip records and group by date
+        :param kwargs:
+        :return:
+        """
+        ip_str = kwargs.get('ip')
+        type = kwargs.get('type')
+        _interval = kwargs.get('interval', '1h')
+
+        cache_key = 'date-record-{0}-{1}'.format(
+            ip_str, type
+        )
+        json_res = cache.get(cache_key)
+
+        if not json_res:
+            s = cls.search().query("match", ip=ip_str)
+            s.aggs.bucket('ip_per_hour', 'date_histogram', field='@timestamp',
+                          interval=_interval)
+            s.aggs['ip_per_hour'].bucket('ip_term', 'terms',
+                                         field='ip.keyword')
+            s.aggs['ip_per_hour']['ip_term'].metric('flows_per_hour', 'sum',
+                                                    field='flows')
+            s.aggs['ip_per_hour']['ip_term'].metric('bytes_per_hour', 'sum',
+                                                    field='bytes')
+            s.aggs['ip_per_hour']['ip_term'].metric('packets_per_hour', 'sum',
+                                                    field='packets')
+
+            # cls.debug_query(s)
+            response = s.execute()
+
+            json_res = {'datetime': [], 'flows': [],
+                        'bytes': [], 'packets': []}
+            for dt in response.aggregations.ip_per_hour.buckets:
+                datetime = dt.key_as_string
+                for stats in dt.ip_term.buckets:
+                    json_res['datetime'].append(datetime)
+                    json_res['flows'].append(stats.flows_per_hour.value)
+                    json_res['bytes'].append(
+                        cls.bytes_convert(stats.bytes_per_hour.value, 'mb')
+                    )
+                    json_res['packets'].append(
+                        cls.number_convert(stats.packets_per_hour.value, 'k')
+                    )
+            cache.set(cache_key, json_res)
+        return json_res
+
+
+class SrcIp(DocType, CommonDoc, CommonIp):
+    """
+    src ip doc class
+    """
+    flows = Long()
+    bytes = Long()
+    packets = Long()
+    ip = Keyword()
+
+    class Meta:
+        index = 'src-ip-stats-2017.08.01'
+
+
+class DstIp(DocType, CommonDoc, CommonIp):
+    """
+    dst ip doc class
+    """
+    flows = Long()
+    bytes = Long()
+    packets = Long()
+    ip = Keyword()
+
+    class Meta:
+        index = 'dst-ip-stats-2017.08.01'
