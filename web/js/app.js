@@ -76,7 +76,7 @@ function generate_chart_1(){
         // 使用刚指定的配置项和数据显示图表。
         chart_1.setOption(option);
         chart_1.on('click', function (params) {
-            window.location.href="ip_details.html?ip="+encodeURIComponent(params.name)
+            window.location.href="/app/ip_details.html?ip="+encodeURIComponent(params.name)
         });
     })
 }

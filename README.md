@@ -60,3 +60,15 @@
 1. 安装pycharm专业版
 2. 右键web/app/index.html -> open in browser
 ```
+
+挂载到nginx
+```
+> sudo apt-get install nginx
+> sudo vim /etc/nginx/sites-enabled/default
+------
+# if the static file encode has problem, set it
+sendfile off;
+root /vagrant/mnet/web;
+------
+> sudo service nginx restart
+```
