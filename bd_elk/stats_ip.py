@@ -9,7 +9,6 @@ class CommonIp(DocType):
     """
     Common Ip Func
     """
-    local_pc_ip = ['10.0.2.15', '10.0.2.3']
 
     @classmethod
     def get_stats(cls, **kwargs):
@@ -24,8 +23,7 @@ class CommonIp(DocType):
 
         if not json_res:
             s = cls.search().extra(size=0)
-            s.aggs.bucket('ip_terms', 'terms', field='ip.keyword',
-                          exclude=cls.local_pc_ip)
+            s.aggs.bucket('ip_terms', 'terms', field='ip.keyword')
             s.aggs['ip_terms'].metric('flows_per_ip', 'sum', field='flows')
             s.aggs['ip_terms'].metric('bytes_per_ip', 'sum', field='bytes')
             s.aggs['ip_terms'].metric('packets_per_ip', 'sum', field='packets')
@@ -112,8 +110,7 @@ class CommonIp(DocType):
         if not json_res:
             s = cls.search().extra(size=0)
             # agg data, 1:ips, 2:group by date, 3:ip-avg flows
-            s.aggs.bucket('ips', 'terms', field='ip.keyword', size=7,
-                          exclude=cls.local_pc_ip)
+            s.aggs.bucket('ips', 'terms', field='ip.keyword', size=7)
             s.aggs['ips'].bucket('date_avg_flow', 'date_histogram',
                                  field='@timestamp',
                                  interval=_interval)
@@ -152,7 +149,7 @@ class SrcIp(CommonDoc, CommonIp):
     ip = Keyword()
 
     class Meta:
-        index = 'src-ip-stats-2017.08.01'
+        index = 'src-ip-stats-2017.08.02'
 
 
 class DstIp(CommonDoc, CommonIp):
@@ -165,4 +162,42 @@ class DstIp(CommonDoc, CommonIp):
     ip = Keyword()
 
     class Meta:
-        index = 'dst-ip-stats-2017.08.01'
+        index = 'dst-ip-stats-2017.08.02'
+
+
+class Netflow(CommonDoc, CommonIp):
+    """
+    netflow data doc class
+    """
+
+    class Meta:
+        index = 'netflow-2017.08.02'
+
+    @classmethod
+    def get_stats_by_src_ip(cls, **kwargs):
+        """
+        读取netflow的数据
+        :param kwargs:
+        :return:
+        """
+        _ip = kwargs.get('ip')
+        cache_key = 'netflow-src-ip-stats-{0}'.format(_ip)
+        json_res = cache.get(cache_key)
+
+        if not json_res:
+            s = cls.search().query("match", **{'netflow.ipv4_src_addr': _ip})\
+                .extra(size=0)
+            s.aggs.bucket('dst_ips', 'terms',
+                          field='netflow.ipv4_dst_addr.keyword', size=7)
+            s.aggs['dst_ips'].metric('avg_packet', 'avg',
+                                     field='netflow.in_pkts')
+
+            cls.debug_query(s)
+            response = s.execute()
+
+            json_res = {}
+            for dt in response.aggregations.dst_ips.buckets:
+                json_res[dt.key] = round(dt.avg_packet.value, 2)
+
+            cache.set(cache_key, json_res)
+        return json_res
