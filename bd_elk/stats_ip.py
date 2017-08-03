@@ -54,16 +54,18 @@ class CommonIp(DocType):
         :return:
         """
         ip_str = kwargs.get('ip')
-        type = kwargs.get('type')
+        _type = kwargs.get('type')
         _interval = kwargs.get('interval', '1h')
 
         cache_key = 'date-record-{0}-{1}'.format(
-            ip_str, type
+            ip_str, _type
         )
         json_res = cache.get(cache_key)
 
         if not json_res:
             s = cls.search().query("match", ip=ip_str).extra(size=0)
+
+            # agg data
             s.aggs.bucket('ip_per_hour', 'date_histogram', field='@timestamp',
                           interval=_interval)
             s.aggs['ip_per_hour'].bucket('ip_term', 'terms',
@@ -91,6 +93,51 @@ class CommonIp(DocType):
                     json_res['packets'].append(
                         cls.number_convert(stats.packets_per_hour.value, 'k')
                     )
+            cache.set(cache_key, json_res)
+        return json_res
+
+    @classmethod
+    def get_all_date_record(cls, **kwargs):
+        """
+        get all ip adress date record
+        :param kwargs:
+        :return:
+        """
+        _type = kwargs.get('type')
+        _interval = kwargs.get('interval', '1h')
+
+        cache_key = 'all-ip-date-record-{0}'.format(_type)
+        json_res = cache.get(cache_key)
+
+        if not json_res:
+            s = cls.search().extra(size=0)
+            # agg data, 1:ips, 2:group by date, 3:ip-avg flows
+            s.aggs.bucket('ips', 'terms', field='ip.keyword', size=7,
+                          exclude=cls.local_pc_ip)
+            s.aggs['ips'].bucket('date_avg_flow', 'date_histogram',
+                                 field='@timestamp',
+                                 interval=_interval)
+            s.aggs['ips']['date_avg_flow'].metric('ip_avg_flow', 'avg',
+                                                  field='flows')
+
+            cls.debug_query(s)
+            response = s.execute()
+
+            json_res = {'datetime': []}
+            for dt in response.aggregations.ips.buckets:
+                _ip = dt.key
+                json_res[_ip] = {'avg_flow': []}
+                datetime_len = len(dt.date_avg_flow.buckets)
+                for date_flow in dt.date_avg_flow.buckets:
+                    if datetime_len != len(json_res['datetime']):
+                        json_res['datetime'].append(
+                            date_flow.key_as_string
+                        )
+
+                    json_res[_ip]['avg_flow'].append(
+                        date_flow.ip_avg_flow.value
+                    )
+
             cache.set(cache_key, json_res)
         return json_res
 
