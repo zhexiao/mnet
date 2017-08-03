@@ -120,7 +120,7 @@ class CommonIp(DocType):
             s.aggs['ips']['date_avg_flow'].metric('ip_avg_flow', 'avg',
                                                   field='flows')
 
-            cls.debug_query(s)
+            # cls.debug_query(s)
             response = s.execute()
 
             json_res = {'datetime': []}
