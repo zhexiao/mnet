@@ -33,13 +33,17 @@ class IpDateRecord(APIView):
     def get(self, request, format=None):
         type = request.GET.get('type')
         ip = request.GET.get('ip')
-        if not ip:
-            raise MnetError('ip不存在')
 
         if type == 'src':
-            res = SrcIp.get_date_record(ip=ip, type=type)
+            if not ip:
+                res = SrcIp.get_all_date_record(type=type)
+            else:
+                res = SrcIp.get_date_record(ip=ip, type=type)
         elif type == 'dst':
-            res = DstIp.get_date_record(ip=ip, type=type)
+            if not ip:
+                res = DstIp.get_all_date_record(type=type)
+            else:
+                res = DstIp.get_date_record(ip=ip, type=type)
         else:
             raise MnetError('请指定type（src, dst）。')
 
