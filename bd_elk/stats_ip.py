@@ -130,10 +130,11 @@ class CommonIp(DocType):
                         json_res['datetime'].append(
                             date_flow.key_as_string
                         )
-
-                    json_res[_ip]['avg_flow'].append(
-                        round(date_flow.ip_avg_flow.value, 2)
-                    )
+                    if date_flow.ip_avg_flow.value:
+                        _avg_flow = round(date_flow.ip_avg_flow.value, 2)
+                    else:
+                        _avg_flow = 0
+                    json_res[_ip]['avg_flow'].append(_avg_flow)
 
             cache.set(cache_key, json_res)
         return json_res
