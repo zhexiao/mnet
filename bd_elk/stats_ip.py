@@ -4,26 +4,12 @@ from bd_elk.common_doc import CommonDoc
 from django.core.cache import cache
 
 
-class CommonIp(object):
+class CommonIp(DocType):
     # todo should use pandas to do json format
     """
     Common Ip Func
     """
-
     local_pc_ip = ['10.0.2.15', '10.0.2.3']
-
-    @classmethod
-    def search_all(cls):
-        """
-        search all docs
-        :return:
-        """
-        s = cls.search()
-        response = s.scan()
-        print(cls.to_json_string(s.to_dict()))
-        print('Total %d hits found.' % s.count())
-        for h in response:
-            print(h.to_dict())
 
     @classmethod
     def get_stats(cls, **kwargs):
@@ -37,7 +23,7 @@ class CommonIp(object):
         json_res = cache.get(cache_key)
 
         if not json_res:
-            s = cls.search()
+            s = cls.search().extra(size=0)
             s.aggs.bucket('ip_terms', 'terms', field='ip.keyword',
                           exclude=cls.local_pc_ip)
             s.aggs['ip_terms'].metric('flows_per_ip', 'sum', field='flows')
@@ -77,7 +63,7 @@ class CommonIp(object):
         json_res = cache.get(cache_key)
 
         if not json_res:
-            s = cls.search().query("match", ip=ip_str)
+            s = cls.search().query("match", ip=ip_str).extra(size=0)
             s.aggs.bucket('ip_per_hour', 'date_histogram', field='@timestamp',
                           interval=_interval)
             s.aggs['ip_per_hour'].bucket('ip_term', 'terms',
@@ -109,7 +95,7 @@ class CommonIp(object):
         return json_res
 
 
-class SrcIp(DocType, CommonDoc, CommonIp):
+class SrcIp(CommonDoc, CommonIp):
     """
     src ip doc class
     """
@@ -122,7 +108,7 @@ class SrcIp(DocType, CommonDoc, CommonIp):
         index = 'src-ip-stats-2017.08.01'
 
 
-class DstIp(DocType, CommonDoc, CommonIp):
+class DstIp(CommonDoc, CommonIp):
     """
     dst ip doc class
     """

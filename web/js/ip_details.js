@@ -21,7 +21,7 @@ function generate_chart_1(){
 
         var option = {
             title: {
-                text: '作为源IP-时间段数据'
+                text: '作为源IP-时间段数据平均值'
             },
             tooltip: {
                 trigger: 'axis',
@@ -84,7 +84,7 @@ function generate_chart_2(){
 
         var option = {
             title: {
-                text: '作为目的IP-时间段数据'
+                text: '作为目的IP-时间段数据平均值'
             },
             tooltip: {
                 trigger: 'axis',
