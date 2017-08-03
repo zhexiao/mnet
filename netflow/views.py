@@ -7,7 +7,6 @@ from bd_elk.common_doc import MnetError
 
 class TestApi(APIView):
     def get(self, request, format=None):
-        SrcIp.get_ip_stats()
         return Response("test")
 
 
