@@ -26,20 +26,17 @@ function generate_chart_1(){
             _series.push({
                 'name': _key,
                 'type':'line',
-                'stack': '总量',
                 'data': res[_key]['avg_flow']
             })
         }
-
+        console.log(ip_list)
+        console.log(_series)
         var option = {
             title: {
                 text: 'Src IP flow平均值'
             },
             tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'shadow'
-                }
+                trigger: 'axis'
             },
             legend: {
                 data: ip_list
