@@ -1,10 +1,33 @@
 import json
+from django.core.cache import cache
 
 
 class ComFunc(object):
     """
     可以通用的函数
     """
+
+    @classmethod
+    def cache(cls, key, **kwargs):
+        """
+        读取，与写入 cache数据
+        :param key:
+        :return:
+        """
+        update = kwargs.get('update', False)
+        writing_data = kwargs.get('data')
+        # 3600秒的默认过期时间
+        duration = kwargs.get('duration', 3600)
+
+        # 如果不存在写入数据，则默认当作读取操作
+        if not writing_data:
+            json_res = cache.get(key)
+            if json_res and not update:
+                return json_res
+            return False
+        # 当作写入操作
+        else:
+            cache.set(key, writing_data, duration)
 
     @classmethod
     def to_json_string(cls, _json):
