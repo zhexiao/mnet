@@ -1,4 +1,3 @@
-var server_host = "http://192.168.33.20:8000"
 var _ip = location.href.replace(/.*ip=/, '')
 
 $(function(){
