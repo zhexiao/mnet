@@ -1,5 +1,3 @@
-
-
 $(function(){
     generate_top_flow()
     generate_chart_2()
