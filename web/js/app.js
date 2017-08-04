@@ -29,8 +29,7 @@ function generate_chart_1(){
                 'data': res[_key]['avg_flow']
             })
         }
-        console.log(ip_list)
-        console.log(_series)
+
         var option = {
             title: {
                 text: 'Src IP flow平均值'

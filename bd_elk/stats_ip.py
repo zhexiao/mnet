@@ -1,14 +1,18 @@
 # -*- coding: UTF-8 -*-
 from elasticsearch_dsl import DocType, Keyword, Long
-from bd_elk.common_doc import CommonDoc
 from django.core.cache import cache
+from bd_elk.common_es import CommonEs
+from ultis.commons import ComFunc
 
 
-class CommonIp(DocType):
+class CommonIp(DocType, CommonEs):
     # todo should use pandas to do json format
     """
-    Common Ip Func
+    基于Ip 数据公用的类
     """
+
+    # 指定的类型（src，dst...）
+    _type = None
 
     @classmethod
     def get_stats(cls, **kwargs):
@@ -16,9 +20,7 @@ class CommonIp(DocType):
         get ip stats
         :return:
         """
-        type = kwargs.get('type')
-
-        cache_key = 'ip-stats-{0}'.format(type)
+        cache_key = 'ip-stats-{0}'.format(cls._type)
         json_res = cache.get(cache_key)
 
         if not json_res:
@@ -35,9 +37,9 @@ class CommonIp(DocType):
             for stats in response.aggregations.ip_terms.buckets:
                 json_res['ip'].append(stats.key)
                 json_res['flows'].append(stats.flows_per_ip.value)
-                json_res['bytes'].append(
-                    cls.bytes_convert(stats.bytes_per_ip.value, 'kb')
-                )
+                json_res['bytes'].append(ComFunc.bytes_convert(
+                    stats.bytes_per_ip.value, 'kb'
+                ))
                 json_res['packets'].append(stats.packets_per_ip.value)
 
             cache.set(cache_key, json_res)
@@ -52,11 +54,10 @@ class CommonIp(DocType):
         :return:
         """
         ip_str = kwargs.get('ip')
-        _type = kwargs.get('type')
         _interval = kwargs.get('interval', '1h')
 
         cache_key = 'date-record-{0}-{1}'.format(
-            ip_str, _type
+            ip_str, cls._type
         )
         json_res = cache.get(cache_key)
 
@@ -86,11 +87,11 @@ class CommonIp(DocType):
                     json_res['datetime'].append(datetime)
                     json_res['flows'].append(stats.flows_per_hour.value)
                     json_res['bytes'].append(
-                        cls.bytes_convert(stats.bytes_per_hour.value, 'mb')
+                        ComFunc.bytes_convert(stats.bytes_per_hour.value, 'mb')
                     )
-                    json_res['packets'].append(
-                        cls.number_convert(stats.packets_per_hour.value, 'k')
-                    )
+                    json_res['packets'].append(ComFunc.number_convert(
+                        stats.packets_per_hour.value, 'k'
+                    ))
             cache.set(cache_key, json_res)
         return json_res
 
@@ -101,10 +102,9 @@ class CommonIp(DocType):
         :param kwargs:
         :return:
         """
-        _type = kwargs.get('type')
         _interval = kwargs.get('interval', '1h')
 
-        cache_key = 'all-ip-date-record-{0}'.format(_type)
+        cache_key = 'all-ip-date-record-{0}'.format(cls._type)
         json_res = cache.get(cache_key)
 
         if not json_res:
@@ -140,9 +140,9 @@ class CommonIp(DocType):
         return json_res
 
 
-class SrcIp(CommonDoc, CommonIp):
+class SrcIp(CommonIp):
     """
-    src ip doc class
+    src ip
     """
     flows = Long()
     bytes = Long()
@@ -153,9 +153,9 @@ class SrcIp(CommonDoc, CommonIp):
         index = 'src-ip-stats-2017.08.02'
 
 
-class DstIp(CommonDoc, CommonIp):
+class DstIp(CommonIp):
     """
-    dst ip doc class
+    dst ip
     """
     flows = Long()
     bytes = Long()
@@ -166,9 +166,9 @@ class DstIp(CommonDoc, CommonIp):
         index = 'dst-ip-stats-2017.08.02'
 
 
-class Netflow(CommonDoc, CommonIp):
+class NetflowRaw(CommonIp):
     """
-    netflow data doc class
+    netflow raw data
     """
 
     class Meta:
@@ -193,7 +193,7 @@ class Netflow(CommonDoc, CommonIp):
             s.aggs['dst_ips'].metric('avg_packet', 'avg',
                                      field='netflow.in_pkts')
 
-            cls.debug_query(s)
+            # cls.debug_query(s)
             response = s.execute()
 
             json_res = {}
