@@ -15,6 +15,8 @@ class CommonEs(object):
     es可以共用的函数
     """
 
+    time_zone = "Asia/Shanghai"
+
     @classmethod
     def debug_query(cls, s):
         """

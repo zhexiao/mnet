@@ -60,6 +60,9 @@ class ComFunc(object):
         :param _type:
         :return:
         """
+        if not _number:
+            return 0
+
         if _type == 'm':
             _d = _number / 1000000
         elif _type == 'k':
