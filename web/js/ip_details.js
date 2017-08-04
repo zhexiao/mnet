@@ -30,7 +30,7 @@ function generate_netflow_src_ip_stats(){
 
         var option = {
             title: {
-                text: '作为源IP-与其交流的目的IP'
+                text: '源IP - 与其交流的目的IP占比'
             },
             tooltip: {
                 trigger: 'item',

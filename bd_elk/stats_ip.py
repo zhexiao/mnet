@@ -181,7 +181,7 @@ class DstIp(CommonIp):
         index = 'dst-ip-stats-2017.08.02'
 
 
-class NetflowRaw(CommonIp):
+class Netflow(CommonIp):
     """
     netflow raw data
     """
