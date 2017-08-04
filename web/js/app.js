@@ -1,7 +1,6 @@
 $(function(){
     generate_top_flow()
     generate_chart_2()
-    generate_chart_3()
 	generate_chart_4()
 })
 
