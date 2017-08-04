@@ -1,13 +1,11 @@
-var server_host = "http://192.168.33.20:8000"
-
 $(function(){
-    generate_chart_1()
+    generate_top_flow()
     generate_chart_2()
     generate_chart_3()
 	generate_chart_4()
 })
 
-function generate_chart_1(){
+function generate_top_flow(){
     var _chart = echarts.init($('.chart-1-body')[0]);
 
     $.ajax({
@@ -15,26 +13,29 @@ function generate_chart_1(){
         type: 'get',
         dataType: 'json'
     }).done(function(res){
-        var _series = [];
-        var ip_list = []
+        var series_data = [], ip_list = [], datetime_list = [];
 
-        for (_key in res){
-            if (_key == 'datetime'){
-                continue
+        for (ip in res){
+            var tmp = {
+                'name': ip,
+                'type': 'line',
+                'data': []
+            }
+            ip_list.push(ip)
+            for (key in res[ip]) {
+                tmp['data'].push(res[ip][key]['avg_flow'])
             }
 
-            ip_list.push(_key)
-            _series.push({
-                'name': _key,
-                'type':'line',
-                'data': res[_key]['avg_flow']
-            })
+            series_data.push(tmp)
         }
-        console.log(ip_list)
-        console.log(_series)
+
+        for (key in res[ip_list[0]]){
+            datetime_list.push(res[ip_list[0]][key]['datetime'])
+        }
+
         var option = {
             title: {
-                text: 'Src IP flow平均值'
+                text: 'Top7源IP - flow平均值'
             },
             tooltip: {
                 trigger: 'axis'
@@ -42,16 +43,10 @@ function generate_chart_1(){
             legend: {
                 data: ip_list
             },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
-            },
             xAxis: [
                 {
                     type: 'category',
-                    data: res['datetime']
+                    data: datetime_list
                 }
             ],
             yAxis: [
@@ -60,7 +55,7 @@ function generate_chart_1(){
                     name: 'flows'
                 }
             ],
-            series : _series
+            series : series_data
         };
 
         // 使用刚指定的配置项和数据显示图表。
@@ -79,131 +74,53 @@ function generate_chart_2(){
         type: 'get',
         dataType: 'json'
     }).done(function(res){
+        var flows_list = [], packets_list = [], bytes_list = [], ip_lists = [];
+        for (key in res){
+            ip_lists.push(res[key]['ip'])
+            flows_list.push(res[key]['flows'])
+            packets_list.push(res[key]['packets'])
+            bytes_list.push(res[key]['bytes'])
+        }
 
         var option = {
             title: {
-                text: 'Src IP 平均值'
+                text: '源IP - 平均值'
             },
             tooltip: {
                 trigger: 'axis',
-                axisPointer: {
-                    type: 'shadow'
-                }
+               axisPointer: {
+                   type: 'shadow'
+               }
             },
             legend: {
-                data: ['bytes(KB)', 'flows', 'packets']
+                data: ['bytes(MB)', 'flows(K)', 'packets(K)']
             },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
+            xAxis: {
+                type: 'value'
             },
-            xAxis: [
-                {
-                    type: 'category',
-                    data: res['ip']
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'value',
-                    name: 'bytes, flows'
-                },
-                {
-                    type: 'value',
-                    name: 'packets'
-                }
-            ],
+            yAxis: {
+                type: 'category',
+                data: ip_lists
+            },
             series : [
                 {
-                    name: 'bytes(KB)',
+                    name: 'bytes(MB)',
                     type: 'bar',
-                    data: res['bytes']
+                    stack: '总量',
+                    data: bytes_list
                 },
                 {
-                    name: 'flows',
+                    name: 'flows(K)',
                     type: 'bar',
-                    data: res['flows'],
+                    stack: '总量',
+                    data: flows_list
                 },
                 {
-                    name: 'packets',
+                    name: 'packets(K)',
                     type: 'bar',
-                    data: res['packets'],
-                    yAxisIndex: 1
-                },
-            ]
-        };
-
-        // 使用刚指定的配置项和数据显示图表。
-        _chart.setOption(option);
-        _chart.on('click', function (params) {
-            window.location.href="/app/ip_details.html?ip="+encodeURIComponent(params.name)
-        });
-    })
-}
-
-function generate_chart_3(){
-    var _chart = echarts.init($('.chart-3-body')[0]);
-
-    $.ajax({
-        url: server_host+'/netflow/ip_stats?type=dst',
-        type: 'get',
-        dataType: 'json'
-    }).done(function(res){
-
-        var option = {
-            title: {
-                text: 'Dst IP 平均值'
-            },
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'shadow'
+                    stack: '总量',
+                    data: packets_list
                 }
-            },
-            legend: {
-                data: ['bytes(KB)', 'flows', 'packets']
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
-            },
-            xAxis: [
-                {
-                    type: 'category',
-                    data: res['ip']
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'value',
-                    name: 'bytes, flows'
-                },
-                {
-                    type: 'value',
-                    name: 'packets'
-                }
-            ],
-            series : [
-                {
-                    name: 'bytes(KB)',
-                    type: 'bar',
-                    data: res['bytes']
-                },
-                {
-                    name: 'flows',
-                    type: 'bar',
-                    data: res['flows'],
-                },
-                {
-                    name: 'packets',
-                    type: 'bar',
-                    data: res['packets'],
-                    yAxisIndex: 1
-                },
             ]
         };
 
