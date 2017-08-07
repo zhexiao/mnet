@@ -1,6 +1,4 @@
-# -*- coding: UTF-8 -*-
-from elasticsearch_dsl import DocType, Keyword, Long
-
+from elasticsearch_dsl import DocType
 from bd_elk.common_es import CommonEs
 from ultis.commons import ComFunc
 
@@ -15,7 +13,7 @@ class CommonIp(DocType, CommonEs):
     _type = None
 
     @classmethod
-    def get_stats(cls, **kwargs):
+    def get_total_stats(cls, **kwargs):
         """
         get ip stats
         :return:
@@ -52,9 +50,9 @@ class CommonIp(DocType, CommonEs):
         return json_res
 
     @classmethod
-    def get_date_record(cls, **kwargs):
+    def get_ip_date_history(cls, **kwargs):
         """
-        get ip records and group by date
+        读取某IP基于时间段的数据
         :param kwargs:
         :return:
         """
@@ -109,9 +107,9 @@ class CommonIp(DocType, CommonEs):
         return json_res
 
     @classmethod
-    def get_all_date_record(cls, **kwargs):
+    def get_top_date_history(cls, **kwargs):
         """
-        读取前7个IP的平均 数据流
+        按时间段，读取top7 IP的平均数据流
         :param kwargs:
         :return:
         """
@@ -150,74 +148,6 @@ class CommonIp(DocType, CommonEs):
                         ),
                         'datetime': date_flow.key_as_string
                     })
-
-            ComFunc.cache(cache_key, data=json_res)
-        return json_res
-
-
-class SrcIp(CommonIp):
-    """
-    src ip
-    """
-    flows = Long()
-    bytes = Long()
-    packets = Long()
-    ip = Keyword()
-
-    class Meta:
-        index = 'src-ip-stats-2017.08.02'
-
-
-class DstIp(CommonIp):
-    """
-    dst ip
-    """
-    flows = Long()
-    bytes = Long()
-    packets = Long()
-    ip = Keyword()
-
-    class Meta:
-        index = 'dst-ip-stats-2017.08.02'
-
-
-class Netflow(CommonIp):
-    """
-    netflow raw data
-    """
-
-    class Meta:
-        index = 'netflow-2017.08.02'
-
-    @classmethod
-    def get_stats_by_src_ip(cls, **kwargs):
-        """
-        读取netflow的数据
-        :param kwargs:
-        :return:
-        """
-        _ip = kwargs.get('ip')
-
-        cache_key = 'netflow-src-ip-stats-{0}'.format(_ip)
-        json_res = ComFunc.cache(cache_key)
-
-        if not json_res:
-            s = cls.search().query(
-                "match", **{'netflow.ipv4_src_addr': _ip}
-            ).extra(size=0)
-            s.aggs.bucket(
-                'dst_ips', 'terms', field='netflow.ipv4_dst_addr.keyword'
-            )
-            s.aggs['dst_ips'].metric(
-                'avg_packet', 'avg', field='netflow.in_pkts'
-            )
-
-            # cls.debug_query(s)
-            response = s.execute()
-
-            json_res = {}
-            for dt in response.aggregations.dst_ips.buckets:
-                json_res[dt.key] = round(dt.avg_packet.value, 2)
 
             ComFunc.cache(cache_key, data=json_res)
         return json_res

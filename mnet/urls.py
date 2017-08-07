@@ -18,5 +18,5 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^netflow/', include('netflow.urls')),
+    url(r'^stats_ip/', include('stats_ip.urls')),
 ]

@@ -1,9 +1,6 @@
 from ultis.exceptions import MnetException
-from bd_elk.stats_ip import (
-    SrcIp,
-    DstIp,
-    Netflow
-)
+from bd_elk.ip.src import SrcIp
+from bd_elk.ip.dst import DstIp
 
 
 class EsFactory(object):
@@ -17,8 +14,6 @@ class EsFactory(object):
             _class = SrcIp
         elif _type == 'dst':
             _class = DstIp
-        elif _type == 'netflow_raw':
-            _class = Netflow
         else:
             raise MnetException('需要指定type')
 

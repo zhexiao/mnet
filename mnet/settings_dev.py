@@ -5,5 +5,5 @@ from mnet.settings import *
 
 
 INSTALLED_APPS += [
-    'netflow'
+    'stats_ip'
 ]
