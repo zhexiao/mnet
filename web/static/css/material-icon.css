@@ -3,7 +3,7 @@
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  src: url("/static/fonts/materialicon.woff2"); }
+  src: url("../fonts/materialicon.woff2"); }
 .material-icons {
   font-family: 'Material Icons';
   font-weight: normal;
