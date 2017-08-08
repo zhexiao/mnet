@@ -144,9 +144,6 @@
 
 					// 使用刚指定的配置项和数据显示图表。
 					_chart.setOption(option);
-					_chart.on('click', function (params) {
-						window.location.href="/app/ip_details.html?ip="+encodeURIComponent(params.name)
-					});
 				})
 			}
 		}
