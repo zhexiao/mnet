@@ -41,6 +41,9 @@ class ComFunc(object):
         :param _type:
         :return:
         """
+        if not _bytes:
+            return 0
+
         if _type == 'gb':
             _d = _bytes/(1024*1024*1024)
         elif _type == 'mb':

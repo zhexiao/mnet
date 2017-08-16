@@ -19,7 +19,7 @@ class CommonIp(DocType, CommonEs):
         :return:
         """
         cache_key = 'ip-stats-{0}'.format(cls._type)
-        json_res = ComFunc.cache(cache_key)
+        json_res = ComFunc.cache(cache_key, update=True)
 
         if not json_res:
             s = cls.search().extra(size=0)
@@ -28,7 +28,7 @@ class CommonIp(DocType, CommonEs):
             s.aggs['ip_terms'].metric('bytes_per_ip', 'sum', field='bytes')
             s.aggs['ip_terms'].metric('packets_per_ip', 'sum', field='packets')
 
-            # cls.debug_query(s)
+            cls.debug_query(s)
             response = s.execute()
 
             json_res = []
@@ -70,16 +70,14 @@ class CommonIp(DocType, CommonEs):
                 'ip_per_hour', 'date_histogram', field='@timestamp',
                 interval=_interval, time_zone=cls.time_zone
             )
-            s.aggs['ip_per_hour'].bucket(
-                'ip_term', 'terms', field='ip.keyword'
-            )
-            s.aggs['ip_per_hour']['ip_term'].metric(
+
+            s.aggs['ip_per_hour'].metric(
                 'flows_per_hour', 'avg', field='flows'
             )
-            s.aggs['ip_per_hour']['ip_term'].metric(
+            s.aggs['ip_per_hour'].metric(
                 'bytes_per_hour', 'avg', field='bytes'
             )
-            s.aggs['ip_per_hour']['ip_term'].metric(
+            s.aggs['ip_per_hour'].metric(
                 'packets_per_hour', 'avg', field='packets'
             )
 
@@ -89,19 +87,18 @@ class CommonIp(DocType, CommonEs):
             json_res = []
             for dt in response.aggregations.ip_per_hour.buckets:
                 datetime = dt.key_as_string
-                for stats in dt.ip_term.buckets:
-                    json_res.append({
-                        'datetime': datetime,
-                        'flows': ComFunc.number_convert(
-                            stats.flows_per_hour.value, 'k'
-                        ),
-                        'packets': ComFunc.number_convert(
-                            stats.packets_per_hour.value, 'k'
-                        ),
-                        'bytes': ComFunc.bytes_convert(
-                            stats.bytes_per_hour.value, 'mb'
-                        )
-                    })
+                json_res.append({
+                    'datetime': datetime,
+                    'flows': ComFunc.number_convert(
+                        dt.flows_per_hour.value, 'k'
+                    ),
+                    'packets': ComFunc.number_convert(
+                        dt.packets_per_hour.value, 'k'
+                    ),
+                    'bytes': ComFunc.bytes_convert(
+                        dt.bytes_per_hour.value, 'mb'
+                    )
+                })
 
             ComFunc.cache(cache_key, data=json_res)
         return json_res
