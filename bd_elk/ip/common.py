@@ -19,7 +19,7 @@ class CommonIp(DocType, CommonEs):
         :return:
         """
         cache_key = 'ip-stats-{0}'.format(cls._type)
-        json_res = ComFunc.cache(cache_key, update=True)
+        json_res = ComFunc.cache(cache_key)
 
         if not json_res:
             s = cls.search().extra(size=0)
@@ -28,7 +28,7 @@ class CommonIp(DocType, CommonEs):
             s.aggs['ip_terms'].metric('bytes_per_ip', 'sum', field='bytes')
             s.aggs['ip_terms'].metric('packets_per_ip', 'sum', field='packets')
 
-            cls.debug_query(s)
+            # cls.debug_query(s)
             response = s.execute()
 
             json_res = []
