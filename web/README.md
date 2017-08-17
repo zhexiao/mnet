@@ -1,6 +1,6 @@
 # web
-
-> mnet web
+ 
+以Vue为框架的前端项目
 
 ## Build Setup
 
