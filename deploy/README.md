@@ -20,6 +20,7 @@ $ docker build -t kafka -f Dockerfile-kafka .
 
 $ docker run \
     --name kf1 \
+    --publish 9092:9092 \
     --link=zoo1:zoo1 \
     --env KAFKA_BROKER_ID=1 \
     --env KAFKA_LISTENERS=PLAINTEXT://:9092 \
