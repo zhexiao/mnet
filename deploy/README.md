@@ -65,3 +65,9 @@ $ docker run \
     --detach \
     kibana:6.4.3 
 ```
+
+# Logstash
+```
+$ cp default.conf.example default.conf
+$ cp logstash.yml.example logstash.yml
+```
