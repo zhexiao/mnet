@@ -39,3 +39,29 @@ $ docker exec -it kf1 /kafka/kafka_2.12-2.3.0/bin/kafka-topics.sh --describe --z
 $ docker exec -it kf1 /kafka/kafka_2.12-2.3.0/bin/kafka-console-consumer.sh --bootstrap-server kf1:9092 --topic mytest --from-beginning
 $ docker exec -it kf1 /kafka/kafka_2.12-2.3.0/bin/kafka-console-producer.sh --broker-list kf1:9092 --topic mytest
 ```
+
+# Elasticsearch
+```
+$ docker run \
+    --name es1 \
+    --publish 9200:9200 \
+    --publish 9300:9300 \
+    --env "discovery.type=single-node" \
+    --restart always \
+    --network zxnet \
+    --detach \
+    elasticsearch:6.4.3
+```
+
+# Kibana
+```
+$ docker run \
+    --name kibana \
+    --publish 5601:5601 \
+    --link=es1:es1 \
+    --env "ELASTICSEARCH_HOSTS=es1:9200" \
+    --restart always \
+    --network zxnet \
+    --detach \
+    kibana:6.4.3
+```
