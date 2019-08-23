@@ -1,0 +1,13 @@
+#
+# docker build -t mylogstash -f Dockerfile-logstash .
+#
+FROM logstash:6.4.3
+
+ENV LOGSTASH_HOME=/usr/share/logstash
+
+RUN ${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-kafka
+
+COPY default.conf ${LOGSTASH_HOME}/config/default.conf
+COPY logstash.yml ${LOGSTASH_HOME}/config/logstash.yml
+
+CMD ${LOGSTASH_HOME}/bin/logstash -f ${LOGSTASH_HOME}/config/default.conf --config.reload.automatic

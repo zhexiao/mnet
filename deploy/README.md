@@ -70,4 +70,16 @@ $ docker run \
 ```
 $ cp default.conf.example default.conf
 $ cp logstash.yml.example logstash.yml
+
+$ $ docker run \
+    --name lg1 \
+    --publish 4739:4739/udp \
+    --publish 21561:21561/udp \
+    --publish 21562:21562/udp \
+    --link=es1:es1 \
+    --env "ELASTICSEARCH_URL=http://es1:9200" \
+    --restart always \
+    --network zxnet \
+    --detach \
+    logstash:6.4.3 
 ```
