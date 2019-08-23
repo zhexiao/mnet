@@ -1,0 +1,42 @@
+input {
+    udp{
+        port => "4739"
+        codec => "netflow"
+        tags => "netflow_input"
+    }
+
+    udp{
+        port => "21561"
+        codec => "json"
+        tags => "src_ip_stats"
+    }
+
+    udp{
+        port => "21562"
+        codec => "json"
+        tags => "dest_ip_stats"
+    }
+}
+
+output{
+    stdout{
+        codec => rubydebug
+    }
+
+    if "dest_ip_stats" in [tags] {
+        kafka{
+            topic_id => "mnet"
+            bootstrap_servers  => "kf1:9092,kf2:9092,kf3:9092"
+            codec => "json"
+        }
+    }
+
+    if "src_ip_stats" in [tags] {
+        elasticsearch {
+            hosts => "http://essingle:9200"
+            index => "test"
+            document_type => "_doc"
+            codec => "json"
+        }
+    }
+}
