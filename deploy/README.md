@@ -56,12 +56,12 @@ $ docker run \
 # Kibana
 ```
 $ docker run \
-    --name kibana \
+    --name kb1 \
     --publish 5601:5601 \
     --link=es1:es1 \
-    --env "ELASTICSEARCH_HOSTS=es1:9200" \
+    --env "ELASTICSEARCH_URL=http://es1:9200" \
     --restart always \
     --network zxnet \
     --detach \
-    kibana:6.4.3
+    kibana:6.4.3 
 ```
