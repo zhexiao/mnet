@@ -1,0 +1,22 @@
+#
+# docker build -t kafka -f Dockerfile-kafka .
+#
+FROM java-base:latest
+
+EXPOSE 9092
+
+# ENV
+ENV KAFKA_VERSION=kafka_2.12-2.3.0
+
+WORKDIR /kafka
+ADD ./pkg/${KAFKA_VERSION}.tgz .
+
+# ENV
+ENV KAFKA_HOME=/kafka/${KAFKA_VERSION}
+
+# 修改配置文件
+COPY kafka_configuration.sh /tmp/
+RUN chmod a+x /tmp/*.sh && mv /tmp/kafka_configuration.sh /usr/bin 	
+
+# 启动
+CMD kafka_configuration.sh && ${KAFKA_HOME}/bin/kafka-server-start.sh ${KAFKA_HOME}/config/server.properties
