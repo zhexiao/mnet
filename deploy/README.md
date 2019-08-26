@@ -1,6 +1,36 @@
 # 项目部署
 整套服务项目部署流程，整套操作都在deploy目录下进行。
 
+# docker跨主机通信
+现有机器vm1（192.168.71.148）和vm2（192.168.71.152）。设vm1为管理主节点，其余为工作节点。
+
+跨主机
+```
+在 148 上创建manager
+$ docker swarm init --advertise-addr 192.168.71.148
+
+在其余的工作机器加入节点
+$ docker swarm join --token SWMTKN-1-5hcor53t93skr6k8sacb54n8sipo1za7oqa4wgywid8ugjhkjd-6giddshlk9dsa5213ay80um8s 192.168.71.148:2377
+
+如果找不到了加入命令，则可以在管理节点输入
+$ docker swarm join-token worker
+```
+
+网络
+```
+创建网络，--attachable  是为了swarm集群外的容器能够加入该网络
+$ docker network create -d overlay --attachable zxnet
+
+148机器（manager）测试alpine1 
+$ docker run -it --name alpine1 --network zxnet alpine
+
+152机器(worker)测试alpine2，注意 -d 表示detached 
+$ docker run -it --name alpine2 --network zxnet alpine
+
+互相启动ping命令
+$ ping alpine2
+```
+
 # Zookeeper
 ```
 $ docker run \
@@ -68,6 +98,7 @@ $ docker run \
 
 # Logstash
 ```
+# default.conf定义数据流动，与下方测试紧密关联
 $ cp default.conf.example default.conf
 $ cp logstash.yml.example logstash.yml
 
@@ -89,5 +120,9 @@ $ docker run \
 ```
 $ docker logs -f lg1
 
+# es测试
 $ python3 logstash_udp_client_test_src.py
+
+# kafka测试 （提前创建好topic）
+$ python3 logstash_udp_client_test_dest.py
 ```
