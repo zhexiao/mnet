@@ -31,6 +31,12 @@ output{
             codec => "json"
             template => "/usr/share/logstash/templates/logstash_netflow_tpl.json"
         }
+
+         kafka{
+            topic_id => "mnet"
+            bootstrap_servers  => "kf1:9092"
+            codec => "json"
+        }
     }
 
     if "dest_ip_stats" in [tags] {
