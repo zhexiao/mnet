@@ -112,7 +112,7 @@ class SparkStreaming:
         处理统计得到的src ip数据
         :return:
         """
-        for ip, val in result.iteritems():
+        for ip, val in result.items():
             json_data = {
                 'ip': ip,
                 'flows': val[0],
@@ -134,7 +134,7 @@ class SparkStreaming:
         处理统计得到的dst ip数据
         :return:
         """
-        for ip, val in result.iteritems():
+        for ip, val in result.items():
             json_data = {
                 'ip': ip,
                 'flows': val[0],
