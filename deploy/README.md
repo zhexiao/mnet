@@ -5,7 +5,7 @@
 ![image](https://github.com/zhexiao/mnet/blob/dev/deploy/arc.png?raw=true)
 
 # docker跨主机通信
-现有机器vm1（192.168.71.148）和vm2（192.168.71.152）。设vm1为管理主节点，其余为工作节点。
+现有机器vm1（192.168.71.148）、vm2（192.168.71.152）和vm3（192.168.71.153）。设vm1为管理主节点，其余为工作节点。
 
 跨主机
 ```
@@ -128,4 +128,10 @@ $ python3 logstash_udp_client_test_src.py
 
 # kafka测试 （提前创建好topic）
 $ python3 logstash_udp_client_test_dest.py
+```
+
+# Spark
+```
+$ docker build -t spark-base -f Dockerfile-spark-base .
+$ docker build -t spark-master -f Dockerfile-spark-master .
 ```

@@ -1,0 +1,40 @@
+#
+# docker build -t spark-base -f Dockerfile-spark-base .
+#
+FROM ubuntu:xenial
+
+# 源更新
+COPY ./common/sources.list /etc/apt/sources.list
+RUN apt-get update --fix-missing  -y && apt-get update -y
+
+# PIP更新
+RUN mkdir -p /root/.pip
+COPY ./common/pip.conf /root/.pip/
+
+# 库安装
+RUN apt-get install -y \
+	openjdk-8-jdk \
+	apt-transport-https wget \
+	python3 python3-pip \
+	&& ln -s /usr/bin/python3 /usr/bin/python
+
+RUN pip3 install pyspark
+
+# ENV
+ENV SPARK_VERSION=spark-2.4.3-bin-hadoop2.7
+ENV HADOOP_VERSION=hadoop-3.1.2
+
+# 包安装
+WORKDIR /hadoop
+RUN chmod -R 777 /hadoop
+ADD ./pkg/${HADOOP_VERSION}.tar.gz .
+
+WORKDIR /spark
+RUN chmod -R 777 /spark
+ADD ./pkg/${SPARK_VERSION}.tgz .
+
+# ENV
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+ENV SPARK_HOME=/spark/${SPARK_VERSION}
+ENV HADOOP_HOME=/hadoop/${HADOOP_VERSION}
+ENV HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop

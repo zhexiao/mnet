@@ -1,0 +1,19 @@
+#
+# docker build -t spark-worker -f Dockerfile-spark-worker .
+#
+FROM spark-base:latest
+
+# ENV
+ENV SPARK_VERSION=spark-2.4.3-bin-hadoop2.7
+
+ENV SPARK_MASTER_WEBUI_PORT=8080
+ENV SPARK_MASTER=spark://spark-master:7077
+
+ENV SPARK_WORKER_CORES=2
+ENV SPARK_WORKER_MEMORY=1g
+
+EXPOSE 8080
+
+# 启动
+CMD /spark/$SPARK_VERSION/bin/spark-class org.apache.spark.deploy.worker.Worker --webui-port $SPARK_MASTER_WEBUI_PORT $SPARK_MASTER
+
