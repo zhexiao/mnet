@@ -177,6 +177,15 @@ $ docker run \
     --network zxnet \
     --detach \
     spark-worker
+    
+$ docker run \
+    --name spark-worker2 \
+    --publish 8082:8080 \
+    --restart always \
+    --link=spark-master:spark-master \
+    --network zxnet \
+    --detach \
+    spark-worker
 ```
 
 测试
