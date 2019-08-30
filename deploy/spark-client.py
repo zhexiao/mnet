@@ -5,7 +5,7 @@ from pyspark.streaming.kafka import KafkaUtils
 
 import json
 from pprint import pprint
-from socket import socket, AF_INET, SOCK_DGRAM
+from socket import socket, AF_INET, SOCK_DGRAM, error as skerror
 
 
 class SparkStreaming:
@@ -160,7 +160,7 @@ class SparkStreaming:
         udp_socket = socket(AF_INET, SOCK_DGRAM)
         try:
             udp_socket.sendto(json_string, self.logstash_server_src_ip_addr)
-        except socket.error:
+        except skerror:
             pprint("cannot connect to udp server")
         finally:
             udp_socket.close()
@@ -174,7 +174,7 @@ class SparkStreaming:
         udp_socket = socket(AF_INET, SOCK_DGRAM)
         try:
             udp_socket.sendto(json_string, self.logstash_server_dst_ip_addr)
-        except socket.error:
+        except skerror:
             pprint("cannot connect to udp server")
         finally:
             udp_socket.close()
