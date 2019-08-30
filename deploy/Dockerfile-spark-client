@@ -6,7 +6,7 @@ FROM spark-base:latest
 ENV PROJECT_HOME=/proj
 
 RUN mkdir ${PROJECT_HOME}
-RUN cd ${PROJECT_HOME}
+WORKDIR ${PROJECT_HOME}
 
 COPY spark-client.py client.py
 

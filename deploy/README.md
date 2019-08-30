@@ -239,6 +239,8 @@ $ docker logs --tail 100 lg1
 
 # spark-client
 ```
+$ docker build -t spark-client -f Dockerfile-spark-client .
+
 $ docker run \
     --name spark-client1 \
     --restart always \
