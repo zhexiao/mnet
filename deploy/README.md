@@ -140,4 +140,24 @@ $ wget -P ./pkg http://mirrors.tuna.tsinghua.edu.cn/apache/hadoop/common/hadoop-
 $ docker build -t spark-base -f Dockerfile-spark-base .
 $ docker build -t spark-master -f Dockerfile-spark-master .
 $ docker build -t spark-worker -f Dockerfile-spark-worker .
+
+运行master，如果报错UnresolvedAddressException，检查--name是否与Dockerfile里面的SPARK_MASTER_HOST一致
+$ docker run \
+    --name spark-master \
+    --publish 8080:8080 \
+    --publish 7077:7077 \
+    --restart always \
+    --network zxnet \
+    --detach \
+    spark-master
+    
+运行worker，启动多个worker需要运行多次，保证--name和--publish唯一即可
+$ docker run \
+    --name spark-worker1 \
+    --publish 8081:8080 \
+    --restart always \
+    --link=spark-master:spark-master \
+    --network zxnet \
+    --detach \
+    spark-worker
 ```
