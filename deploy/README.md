@@ -151,8 +151,7 @@ $ wget -P ./pkg http://mirrors.tuna.tsinghua.edu.cn/apache/spark/spark-2.3.3/spa
 $ wget -P ./pkg http://mirrors.tuna.tsinghua.edu.cn/apache/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz
 
 sparksteaming jar包
-$ wget -P ./pkg https://maven.aliyun.com/repository/central/org/apache/spark/spark-streaming-kafka-0-8-assembly_2.11/2.4.3/spark-streaming-kafka-0-8-assembly_2.11-2.4.3.jar
-$ wget -P ./pkg https://maven.aliyun.com/repository/central/org/apache/spark/spark-streaming-kafka-0-8_2.11/2.4.3/spark-streaming-kafka-0-8_2.11-2.4.3.jar
+$ wget -P ./pkg https://maven.aliyun.com/repository/central/org/apache/spark/spark-streaming-kafka-0-8-assembly_2.11/2.3.3/spark-streaming-kafka-0-8-assembly_2.11-2.3.3.jar
 
 镜像
 $ docker build -t spark-base -f Dockerfile-spark-base .
