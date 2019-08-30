@@ -1,0 +1,25 @@
+{
+    "template": "ipstats-*",
+    "settings": {
+        "index.refresh_interval": "5s"
+    },
+    "mappings": {
+        "_doc": {
+            "dynamic": false,
+            "properties": {
+                "ip": {
+                    "type": "keyword"
+                },
+                "flows": {
+                    "type": "long"
+                },
+                "packets": {
+                    "type": "long"
+                },
+                "bytes": {
+                    "type": "long"
+                }
+            }
+        }
+    }
+}
