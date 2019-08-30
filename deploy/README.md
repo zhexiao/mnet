@@ -199,3 +199,40 @@ $ sudo softflowd -D -v 9 -i ens160 -n 192.168.71.148:4739 -T full
 $ sudo apt install apache2-utils
 $ ab -c 100 -n 1000 -t 30 http://bing.com/
 ```
+
+数据查看
+```
+进入192.168.71.148服务器
+$ docker logs -f lg1
+
+正常会输出
+{
+    "tags" => [
+        [0] "netflow_input"
+    ],
+    "@version" => "1",
+    "@timestamp" => 2019-08-30T03:55:00.000Z,
+        "host" => "192.168.71.182",
+        "netflow" => {
+        "first_switched" => "2019-08-30T03:54:50.999Z",
+        "last_switched" => "2019-08-30T03:54:51.999Z",
+        "input_snmp" => 0,
+        "l4_src_port" => 80,
+        "in_bytes" => 52,
+        "l4_dst_port" => 55474,
+        "protocol" => 6,
+        "src_tos" => 0,
+        "in_src_mac" => "00:50:56:b6:00:ed",
+        "output_snmp" => 0,
+        "out_dst_mac" => "0c:da:41:ae:dd:b3",
+        "version" => 9,
+        "flowset_id" => 1024,
+        "ipv4_src_addr" => "13.107.21.200",
+        "ip_protocol_version" => 4,
+        "flow_seq_num" => 3796,
+        "in_pkts" => 1,
+        "tcp_flags" => 18,
+        "ipv4_dst_addr" => "192.168.71.182"
+    }
+}
+```
