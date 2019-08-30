@@ -197,7 +197,7 @@ $ sudo softflowd -D -v 9 -i ens160 -n 192.168.71.148:4739 -T full
 
 发送模拟数据
 $ sudo apt install apache2-utils
-$ ab -c 100 -n 1000 -t 30 http://bing.com/
+$ ab -c 100 -n 1000 -t 30 http://sina.com.cn/
 ```
 
 数据查看
