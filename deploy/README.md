@@ -236,3 +236,14 @@ $ docker logs --tail 100 lg1
     }
 }
 ```
+
+# spark-client
+```
+$ docker run \
+    --name spark-client1 \
+    --restart always \
+    --link=spark-master:spark-master \
+    --network zxnet \
+    --detach \
+    spark-client
+```

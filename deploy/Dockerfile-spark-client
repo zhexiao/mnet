@@ -7,3 +7,7 @@ ENV PROJECT_HOME=/proj
 
 RUN mkdir ${PROJECT_HOME}
 RUN cd ${PROJECT_HOME}
+
+COPY spark-client.py client.py
+
+CMD python3 ${PROJECT_HOME}/client.py
