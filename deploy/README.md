@@ -78,7 +78,7 @@ $ docker run \
 
 测试
 ```
-$ docker exec -it kf1 /kafka/kafka_2.11-2.2.0/bin/kafka-topics.sh --create --zookeeper zoo1:2181 --replication-factor 2 --partitions 2 --topic mnet
+$ docker exec -it kf1 /kafka/kafka_2.11-2.2.0/bin/kafka-topics.sh --create --zookeeper zoo1:2181 --replication-factor 2 --partitions 1 --topic mnet
 $ docker exec -it kf1 /kafka/kafka_2.11-2.2.0/bin/kafka-topics.sh --describe --zookeeper zoo1:2181 --topic mnet
 
 $ docker exec -it kf1 /kafka/kafka_2.11-2.2.0/bin/kafka-console-consumer.sh --bootstrap-server kf1:9092,kf2:9092 --topic mnet --from-beginning
