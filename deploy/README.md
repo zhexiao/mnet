@@ -46,7 +46,7 @@ $ docker run \
 
 # Kafka
 ```
-$ wget -P ./pkg http://mirrors.tuna.tsinghua.edu.cn/apache/kafka/2.3.0/kafka_2.12-2.3.0.tgz
+$ wget -P ./pkg http://mirrors.tuna.tsinghua.edu.cn/apache/kafka/2.2.0/kafka_2.11-2.2.0.tgz
 
 $ docker build -t java-base -f Dockerfile-java-base .
 $ docker build -t kafka -f Dockerfile-kafka .
