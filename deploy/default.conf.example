@@ -39,20 +39,13 @@ output{
         }
     }
 
-    if "dest_ip_stats" in [tags] {
-        kafka{
-            topic_id => "mnet"
-            bootstrap_servers  => "kf1:9092"
-            codec => "json"
-        }
-    }
-
     if "src_ip_stats" in [tags] {
         elasticsearch {
             hosts => "http://es1:9200"
-            index => "test"
+            index => "ipstats-%{+YYYY.MM.dd}"
             document_type => "_doc"
             codec => "json"
+            template => "/usr/share/logstash/templates/logstash_ipstats_tpl.json"
         }
     }
 }
