@@ -181,3 +181,21 @@ ts = sc.parallelize([3, 1, 2, 5])
 print(ts.count())
 print(ts.collect())
 ```
+
+# 网络收集
+```
+使用softflowd读取网络数据
+$ sudo apt-get install git autoconf bison build-essential libtool libpcap-dev
+$ git clone https://gitee.com/zhexiao/softflowd.git
+$ cd softflowd
+$ autoreconf -i | ./configure
+$ make
+$ sudo make install
+
+抓取数据发送到vm1的端口
+$ sudo softflowd -D -v 9 -i ens160 -n 192.168.71.148:4739 -T full
+
+发送模拟数据
+$ sudo apt install apache2-utils
+$ ab -c 100 -n 1000 -t 30 http://bing.com/
+```
