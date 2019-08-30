@@ -41,3 +41,8 @@ ENV HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop
 
 # spark streaming 连接 kafka jar包
 COPY jar/spark-streaming-kafka-0-10_2.12-2.4.3.jar ${SPARK_HOME}/jars/spark-streaming-kafka-0-10_2.12-2.4.3.jar
+COPY jar/spark-streaming-kafka-0-10_2.12-2.4.3.jar ${SPARK_HOME}/jars/spark-streaming-kafka-0-10_2.12.jar
+COPY jar/kafka-clients-2.0.0.jar ${SPARK_HOME}/jars/kafka-clients-2.0.0.jar
+
+
+
