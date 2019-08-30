@@ -164,5 +164,20 @@ $ docker run \
 
 测试
 ```
-$ 
+$ docker exec -it spark-master python3
+
+把下面的代码复制进去测试：
+from pyspark import SparkContext , SparkConf
+
+conf = SparkConf()
+conf.set("spark.master", "spark://spark-master:7077")
+
+# 设置任务使用的核数
+conf.set("spark.cores.max", 1)
+
+sc = SparkContext(conf=conf)
+ts = sc.parallelize([3, 1, 2, 5])
+
+print(ts.count())
+print(ts.collect())
 ```
