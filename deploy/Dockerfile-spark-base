@@ -40,7 +40,7 @@ ENV HADOOP_HOME=/hadoop/${HADOOP_VERSION}
 ENV HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop
 
 # spark streaming 连接 kafka jar包
-COPY pkg/spark-streaming-kafka-0-8-assembly_2.11-2.2.0.jar ${SPARK_HOME}/jars/spark-streaming-kafka-0-8-assembly_2.11-2.2.0.jar
+COPY pkg/spark-streaming-kafka-0-8-assembly_2.11-2.3.3.jar ${SPARK_HOME}/jars/spark-streaming-kafka-0-8-assembly_2.11-2.3.3.jar
 
 
 

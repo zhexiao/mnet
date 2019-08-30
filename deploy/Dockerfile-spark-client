@@ -10,4 +10,4 @@ WORKDIR ${PROJECT_HOME}
 
 COPY spark-client.py client.py
 
-CMD ${SPARK_HOME}/bin/spark-submit --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.3.3 --jars ${SPARK_HOME}/jars/spark-streaming-kafka-0-8-assembly_2.11-2.2.0.jar ${PROJECT_HOME}/client.py
+CMD ${SPARK_HOME}/bin/spark-submit --packages org.apache.spark:spark-streaming-kafka-0-8_2.11:2.3.3 --jars ${SPARK_HOME}/jars/spark-streaming-kafka-0-8-assembly_2.11-2.3.3.jar ${PROJECT_HOME}/client.py
