@@ -246,6 +246,5 @@ $ docker run \
     --restart always \
     --link=spark-master:spark-master \
     --network zxnet \
-    --detach \
     spark-client
 ```
