@@ -132,6 +132,12 @@ $ python3 logstash_udp_client_test_dest.py
 
 # Spark
 ```
+安装包，包名对应3个Dockerfile里面的ENV，如果版本有变化，需要对应修改
+$ wget -P ./pkg http://mirrors.tuna.tsinghua.edu.cn/apache/spark/spark-2.4.3/spark-2.4.3-bin-hadoop2.7.tgz 
+$ wget -P ./pkg http://mirrors.tuna.tsinghua.edu.cn/apache/hadoop/common/hadoop-3.1.2/hadoop-3.1.2.tar.gz
+
+镜像
 $ docker build -t spark-base -f Dockerfile-spark-base .
 $ docker build -t spark-master -f Dockerfile-spark-master .
+$ docker build -t spark-worker -f Dockerfile-spark-worker .
 ```
