@@ -203,7 +203,7 @@ $ ab -c 100 -n 1000 -t 30 http://bing.com/
 数据查看
 ```
 进入192.168.71.148服务器
-$ docker logs -f lg1
+$ docker logs --tail 100 lg1
 
 正常会输出
 {

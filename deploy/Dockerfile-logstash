@@ -10,4 +10,7 @@ RUN ${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-kafka
 COPY default.conf ${LOGSTASH_HOME}/config/default.conf
 COPY logstash.yml ${LOGSTASH_HOME}/config/logstash.yml
 
+RUN mkdir templates
+COPY logstash_netflow_tpl.json ${LOGSTASH_HOME}/templates/logstash_netflow_tpl.json
+
 CMD ${LOGSTASH_HOME}/bin/logstash -f ${LOGSTASH_HOME}/config/default.conf --config.reload.automatic

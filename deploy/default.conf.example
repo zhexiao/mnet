@@ -23,6 +23,16 @@ output{
         codec => rubydebug
     }
 
+    if "netflow_input" in [tags] {
+        elasticsearch{
+            hosts => "http://es1:9200"
+            index => "netflow-%{+YYYY.MM.dd}"
+            document_type => "_doc"
+            codec => "json"
+            template => "/usr/share/logstash/templates/logstash_netflow_tpl.json"
+        }
+    }
+
     if "dest_ip_stats" in [tags] {
         kafka{
             topic_id => "mnet"

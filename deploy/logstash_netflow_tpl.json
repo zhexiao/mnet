@@ -1,0 +1,19 @@
+{
+    "template": "netflow-*",
+    "settings": {
+        "index.refresh_interval": "5s"
+    },
+    "mappings": {
+        "_doc": {
+            "dynamic": false,
+            "properties": {
+                "host": {
+                    "type": "keyword"
+                },
+                "netflow": {
+                    "type": "object"
+                }
+            }
+        }
+    }
+}
