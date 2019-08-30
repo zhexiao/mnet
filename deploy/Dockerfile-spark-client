@@ -1,0 +1,9 @@
+#
+# docker build -t spark-client -f Dockerfile-spark-client .
+#
+FROM spark-base:latest
+
+ENV PROJECT_HOME=/proj
+
+RUN mkdir ${PROJECT_HOME}
+RUN cd ${PROJECT_HOME}
