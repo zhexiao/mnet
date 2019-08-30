@@ -159,7 +159,7 @@ class SparkStreaming:
         """
         udp_socket = socket(AF_INET, SOCK_DGRAM)
         try:
-            udp_socket.sendto(json_string, self.logstash_server_src_ip_addr)
+            udp_socket.sendto(json_string.encode(), self.logstash_server_src_ip_addr)
         except skerror:
             pprint("cannot connect to udp server")
         finally:
@@ -173,7 +173,7 @@ class SparkStreaming:
         """
         udp_socket = socket(AF_INET, SOCK_DGRAM)
         try:
-            udp_socket.sendto(json_string, self.logstash_server_dst_ip_addr)
+            udp_socket.sendto(json_string.encode(), self.logstash_server_dst_ip_addr)
         except skerror:
             pprint("cannot connect to udp server")
         finally:
