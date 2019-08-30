@@ -21,8 +21,8 @@ RUN apt-get install -y \
 RUN pip3 install pyspark
 
 # ENV
-ENV SPARK_VERSION=spark-2.4.3-bin-hadoop2.7
-ENV HADOOP_VERSION=hadoop-3.1.2
+ENV SPARK_VERSION=spark-2.3.3-bin-hadoop2.7
+ENV HADOOP_VERSION=hadoop-2.7.7
 
 # 包安装
 WORKDIR /hadoop
