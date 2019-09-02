@@ -188,7 +188,7 @@ $ docker run \
     spark-worker
 ```
 
-测试
+测试1
 ```
 $ docker exec -it spark-master python3
 
@@ -206,6 +206,23 @@ ts = sc.parallelize([3, 1, 2, 5])
 
 print(ts.count())
 print(ts.collect())
+```
+
+测试2
+```
+把测试文件夹映射到容器内部
+$ docker run \
+    --name spark-master \
+    --publish 8080:8080 \
+    --publish 7077:7077 \
+    --restart always \
+    --network zxnet \
+    -v /vagrant/mnet/deploy/test:/test \
+    --detach \
+    spark-master
+    
+运行
+$ docker exec -it spark-master python3 /test/spark-client.py
 ```
 
 # 网络收集
