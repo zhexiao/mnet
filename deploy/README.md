@@ -222,7 +222,7 @@ $ docker run \
     spark-master
     
 运行
-$ docker exec -it spark-master python3 /test/spark-client.py
+$ docker exec -it spark-master python3 /test/test1.py
 ```
 
 # 网络收集
