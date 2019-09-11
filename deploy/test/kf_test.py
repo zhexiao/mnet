@@ -10,4 +10,4 @@ while True:
     msg = "my kafka {}".format(i)
     producer.send(topic, msg.encode())
     print('producer - {0}'.format(msg))
-    time.sleep(2)
+    time.sleep(8)
