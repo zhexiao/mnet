@@ -37,6 +37,7 @@ window_words = words.withWatermark(
 # Start running the query that prints the running counts to the console
 query = window_words \
     .writeStream \
+    .trigger(processingTime='10 seconds') \
     .outputMode("complete") \
     .format("console") \
     .option('truncate', 'false') \
