@@ -7,7 +7,5 @@ for msg in consumer:
     val = msg.value.decode()
 
     print(msg.key.decode())
-    print(json.loads(val).get('word'))
-    print(json.loads(val).get('count'))
-    print(json.loads(val).get('window'))
+    print(json.loads(val))
     print('='*30)
