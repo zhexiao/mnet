@@ -36,6 +36,8 @@ data_schema = StructType().add(
         "in_bytes", IntegerType()
     ).add(
         "in_pkts", IntegerType()
+    ).add(
+        "protocol", IntegerType()
     )
 )
 new_stream_data = stream_data.select(
@@ -44,7 +46,9 @@ new_stream_data = stream_data.select(
 )
 new_stream_data.printSchema()
 
-new_df = new_stream_data.select(
+new_df = new_stream_data.filter(
+    new_stream_data.json_data.netflow.protocol == 6
+).select(
     (new_stream_data.json_data.netflow.ipv4_src_addr).alias('src_ip'),
     (new_stream_data.json_data.netflow.in_bytes).alias('in_bytes'),
     (new_stream_data.json_data.netflow.in_pkts).alias('in_pkts'),
