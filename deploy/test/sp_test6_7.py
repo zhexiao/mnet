@@ -6,7 +6,7 @@ kafka:kafka_2.11-2.3.0.tgz
 spark:spark-2.4.4-bin-hadoop2.7.tgz
 """
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import explode, split, from_json, window
+from pyspark.sql.functions import from_json, window
 from pyspark.sql.types import StructType, IntegerType, StringType, TimestampType
 
 
@@ -64,14 +64,15 @@ net_df = new_df.withWatermark(
     window(new_df.create_time, '30 seconds', '30 seconds'),
 ).sum('in_bytes', 'in_pkts')
 
-new_net_df = net_df.withColumnRenamed(
+res_df = net_df.withColumnRenamed(
     "sum(in_bytes)","in_bytes"
 ).withColumnRenamed(
     "sum(in_pkts)","in_pkts"
 )
+res_df.printSchema()
 
 # Start running the query that prints the running counts to the console
-query = new_net_df \
+query = res_df \
     .selectExpr("CAST(window AS STRING) AS key", "to_json(struct(*)) AS value") \
     .writeStream \
     .trigger(processingTime='30 seconds') \
