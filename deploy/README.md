@@ -138,17 +138,6 @@ $ docker run \
     mylogstash 
 ```
 
-测试
-```
-$ docker logs -f lg1
-
-# es测试
-$ python3 logstash_udp_client_test_src.py
-
-# kafka测试 （提前创建好topic）
-$ python3 logstash_udp_client_test_dest.py
-```
-
 # Spark
 ```
 安装包，包名对应Dockerfile-spark-base里面的ENV，如果版本有变化，需要对应修改

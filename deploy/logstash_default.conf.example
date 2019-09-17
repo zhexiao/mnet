@@ -6,7 +6,7 @@ input {
     }
 
     kafka{
-        topic_id => "mnet_agg"
+        topics => ["mnet_agg"]
         bootstrap_servers  => "kf1:9092,kf2:9092"
         codec => "json"
         tags => "ip_stats"
