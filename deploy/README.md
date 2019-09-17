@@ -79,11 +79,15 @@ $ docker run \
 测试
 ```
 $ docker exec -it kf1 /kafka/kafka_2.12-2.2.0/bin/kafka-topics.sh --create --zookeeper zoo1:2181 --replication-factor 2 --partitions 1 --topic mnet
+$ docker exec -it kf1 /kafka/kafka_2.12-2.2.0/bin/kafka-topics.sh --create --zookeeper zoo1:2181 --replication-factor 2 --partitions 1 --topic mnet_agg
+
 $ docker exec -it kf1 /kafka/kafka_2.12-2.2.0/bin/kafka-topics.sh --describe --zookeeper zoo1:2181 --topic mnet
+$ docker exec -it kf1 /kafka/kafka_2.12-2.2.0/bin/kafka-topics.sh --describe --zookeeper zoo1:2181 --topic mnet_agg
 
 $ docker exec -it kf1 /kafka/kafka_2.12-2.2.0/bin/kafka-console-consumer.sh --bootstrap-server kf1:9092,kf2:9092 --topic mnet --from-beginning
 $ docker exec -it kf1 /kafka/kafka_2.12-2.2.0/bin/kafka-console-producer.sh --broker-list kf1:9092,kf2:9092 --topic mnet
 
+$ docker exec -it kf1 /kafka/kafka_2.12-2.2.0/bin/kafka-topics.sh --list  --zookeeper zoo1:2181
 $ docker exec -it kf1 /kafka/kafka_2.12-2.2.0/bin/kafka-topics.sh --delete --zookeeper zoo1:2181 --topic mnet 
 ```
 
@@ -116,7 +120,7 @@ $ docker run \
 # Logstash
 ```
 # default.conf定义数据流动，与下方测试紧密关联
-$ cp default.conf.example default.conf
+$ cp logstash_default.conf.example logstash_default.conf
 $ cp logstash.yml.example logstash.yml
 
 $ docker build -t mylogstash -f Dockerfile-logstash .

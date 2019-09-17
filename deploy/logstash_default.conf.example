@@ -34,7 +34,7 @@ output{
 
          kafka{
             topic_id => "mnet"
-            bootstrap_servers  => "kf1:9092"
+            bootstrap_servers  => "kf1:9092,kf2:9092"
             codec => "json"
         }
     }

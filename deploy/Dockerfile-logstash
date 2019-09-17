@@ -7,7 +7,7 @@ ENV LOGSTASH_HOME=/usr/share/logstash
 
 RUN ${LOGSTASH_HOME}/bin/logstash-plugin install logstash-output-kafka
 
-COPY default.conf ${LOGSTASH_HOME}/config/default.conf
+COPY logstash_default.conf ${LOGSTASH_HOME}/config/logstash_default.conf
 COPY logstash.yml ${LOGSTASH_HOME}/config/logstash.yml
 
 # es模板
@@ -15,4 +15,4 @@ RUN mkdir templates
 COPY logstash_netflow_tpl.json ${LOGSTASH_HOME}/templates/logstash_netflow_tpl.json
 COPY logstash_ipstats_tpl.json ${LOGSTASH_HOME}/templates/logstash_ipstats_tpl.json
 
-CMD ${LOGSTASH_HOME}/bin/logstash -f ${LOGSTASH_HOME}/config/default.conf --config.reload.automatic
+CMD ${LOGSTASH_HOME}/bin/logstash -f ${LOGSTASH_HOME}/config/logstash_default.conf --config.reload.automatic
