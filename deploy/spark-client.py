@@ -48,7 +48,7 @@ new_stream_data = stream_data.select(
 new_stream_data.printSchema()
 
 new_df = new_stream_data.filter(
-    new_stream_data.json_data.netflow.protocol == 6 | new_stream_data.json_data.netflow.protocol == 17
+    new_stream_data.json_data.netflow.protocol == 6
 ).select(
     (new_stream_data.json_data.netflow.ipv4_src_addr).alias('src_ip'),
     (new_stream_data.json_data.netflow.in_bytes).alias('in_bytes'),
