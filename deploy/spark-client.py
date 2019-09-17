@@ -27,7 +27,7 @@ stream_data.printSchema()
 data_schema = StructType().add(
     "host", StringType()
 ).add(
-    "create_time", TimestampType()
+    "event_time", TimestampType()
 ).add(
     "netflow", StructType().add(
         "ipv4_src_addr", StringType()
@@ -53,16 +53,16 @@ new_df = new_stream_data.filter(
     (new_stream_data.json_data.netflow.ipv4_src_addr).alias('src_ip'),
     (new_stream_data.json_data.netflow.in_bytes).alias('in_bytes'),
     (new_stream_data.json_data.netflow.in_pkts).alias('in_pkts'),
-    (new_stream_data.json_data.create_time).alias('create_time'),
+    (new_stream_data.json_data.event_time).alias('event_time'),
 )
 new_df.printSchema()
 
 # 聚合
 net_df = new_df.withWatermark(
-    'create_time', window_time
+    'event_time', window_time
 ).groupBy(
     new_df.src_ip,
-    window(new_df.create_time, window_time, window_time),
+    window(new_df.event_time, window_time, window_time),
 ).sum('in_bytes', 'in_pkts')
 
 res_df = net_df.withColumnRenamed(
