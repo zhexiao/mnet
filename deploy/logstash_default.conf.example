@@ -19,9 +19,8 @@ input {
 }
 
 filter {
-    mutate {
-        # Renames the '@timestamp' field to 'timestamp'
-        rename => { "@timestamp" => "timestamp" }
+    date {
+        add_field  => { "create_time" => "%{@timestamp}" }
     }
 }
 
