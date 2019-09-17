@@ -5,9 +5,11 @@
     },
     "mappings": {
         "_doc": {
-            "dynamic": true,
             "properties": {
-                "ip": {
+                "src_ip": {
+                    "type": "keyword"
+                },
+                "dest_ip": {
                     "type": "keyword"
                 },
                 "flows": {

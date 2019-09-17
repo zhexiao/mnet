@@ -1,6 +1,7 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import from_json, window
 from pyspark.sql.types import StructType, IntegerType, StringType, TimestampType
+import pyspark.sql.functions as funcs
 
 """
 常量
@@ -59,18 +60,16 @@ new_df = new_stream_data.filter(
 new_df.printSchema()
 
 # 聚合
-net_df = new_df.withWatermark(
+res_df = new_df.withWatermark(
     'event_time', window_time
 ).groupBy(
     new_df.src_ip,
     new_df.dest_ip,
     window(new_df.event_time, window_time, window_time),
-).sum('in_bytes', 'in_pkts')
-
-res_df = net_df.withColumnRenamed(
-    "sum(in_bytes)","in_bytes"
-).withColumnRenamed(
-    "sum(in_pkts)","in_pkts"
+).agg(
+    funcs.count("*").alias("flows"),
+    funcs.sum("in_bytes").alias("bytes"),
+    funcs.sum("in_pkts").alias("packets"),
 )
 res_df.printSchema()
 
