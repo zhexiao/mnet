@@ -15,7 +15,7 @@ while True:
             "ipv4_src_addr": "122.204.161.{}".format(random.randint(240, 242)),
             "in_bytes": random.randint(10, 500),
             "in_pkts": random.randint(1, 10),
-            "protocol": random.randint(6, 7),
+            "protocol": random.randint(6, 8),
             "ipv4_dst_addr": "192.168.71.{}".format(random.randint(180, 182)),
         },
         "create_time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),

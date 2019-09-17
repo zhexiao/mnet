@@ -48,9 +48,10 @@ new_stream_data = stream_data.select(
 new_stream_data.printSchema()
 
 new_df = new_stream_data.filter(
-    new_stream_data.json_data.netflow.protocol == 6
+    (new_stream_data.json_data.netflow.protocol == 6) | (new_stream_data.json_data.netflow.protocol == 17)
 ).select(
     (new_stream_data.json_data.netflow.ipv4_src_addr).alias('src_ip'),
+    (new_stream_data.json_data.netflow.ipv4_dst_addr).alias('dest_ip'),
     (new_stream_data.json_data.netflow.in_bytes).alias('in_bytes'),
     (new_stream_data.json_data.netflow.in_pkts).alias('in_pkts'),
     (new_stream_data.json_data.event_time).alias('event_time'),
@@ -62,6 +63,7 @@ net_df = new_df.withWatermark(
     'event_time', window_time
 ).groupBy(
     new_df.src_ip,
+    new_df.dest_ip,
     window(new_df.event_time, window_time, window_time),
 ).sum('in_bytes', 'in_pkts')
 
