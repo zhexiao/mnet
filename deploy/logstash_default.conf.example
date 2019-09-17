@@ -5,16 +5,11 @@ input {
         tags => "netflow_input"
     }
 
-    udp{
-        port => "21561"
+    kafka{
+        topic_id => "mnet_agg"
+        bootstrap_servers  => "kf1:9092,kf2:9092"
         codec => "json"
-        tags => "src_ip_stats"
-    }
-
-    udp{
-        port => "21562"
-        codec => "json"
-        tags => "dest_ip_stats"
+        tags => "ip_stats"
     }
 }
 
@@ -45,7 +40,7 @@ output{
         }
     }
 
-    if "src_ip_stats" in [tags] {
+    if "ip_stats" in [tags] {
         elasticsearch {
             hosts => "http://es1:9200"
             index => "ipstats-%{+YYYY.MM.dd}"

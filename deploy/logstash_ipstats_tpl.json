@@ -5,7 +5,7 @@
     },
     "mappings": {
         "_doc": {
-            "dynamic": false,
+            "dynamic": true,
             "properties": {
                 "ip": {
                     "type": "keyword"
