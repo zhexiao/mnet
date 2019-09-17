@@ -2,6 +2,9 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import from_json, window
 from pyspark.sql.types import StructType, IntegerType, StringType, TimestampType
 
+"""
+常量
+"""
 spark_master = "spark://spark-master:7077"
 kafka_master = "kf1:9092,kf2:9092"
 mnet_topic = "mnet"
