@@ -46,6 +46,7 @@ $ docker run \
 
 # Kafka
 ```
+# 版本修改需要对应修改 Dockerfile-kafka
 $ wget -P ./pkg http://mirrors.tuna.tsinghua.edu.cn/apache/kafka/2.3.0/kafka_2.11-2.3.0.tgz
 
 $ docker build -t java-base -f Dockerfile-java-base .

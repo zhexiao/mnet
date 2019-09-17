@@ -6,7 +6,7 @@ FROM java-base:latest
 EXPOSE 9092
 
 # ENV
-ENV KAFKA_VERSION=kafka_2.12-2.2.0
+ENV KAFKA_VERSION=kafka_2.11-2.3.0
 
 WORKDIR /kafka
 ADD ./pkg/${KAFKA_VERSION}.tgz .
