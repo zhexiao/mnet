@@ -20,7 +20,7 @@ input {
 
 filter {
     mutate {
-        add_field  => { "create_time" => "%{@timestamp}" }
+        add_field  => { "event_time" => "%{@timestamp}" }
     }
 }
 
