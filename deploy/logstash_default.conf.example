@@ -18,6 +18,13 @@ input {
     }
 }
 
+filter {
+    mutate {
+        # Renames the '@timestamp' field to 'timestamp'
+        rename => { "@timestamp" => "timestamp" }
+    }
+}
+
 output{
     stdout{
         codec => rubydebug
