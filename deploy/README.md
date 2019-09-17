@@ -46,7 +46,7 @@ $ docker run \
 
 # Kafka
 ```
-$ wget -P ./pkg http://mirrors.tuna.tsinghua.edu.cn/apache/kafka/2.2.0/kafka_2.12-2.2.0.tgz
+$ wget -P ./pkg http://mirrors.tuna.tsinghua.edu.cn/apache/kafka/2.3.0/kafka_2.11-2.3.0.tgz
 
 $ docker build -t java-base -f Dockerfile-java-base .
 $ docker build -t kafka -f Dockerfile-kafka .
@@ -78,17 +78,17 @@ $ docker run \
 
 测试
 ```
-$ docker exec -it kf1 /kafka/kafka_2.12-2.2.0/bin/kafka-topics.sh --create --zookeeper zoo1:2181 --replication-factor 2 --partitions 1 --topic mnet
-$ docker exec -it kf1 /kafka/kafka_2.12-2.2.0/bin/kafka-topics.sh --create --zookeeper zoo1:2181 --replication-factor 2 --partitions 1 --topic mnet_agg
+$ docker exec -it kf1 /kafka/kafka_2.11-2.3.0/bin/kafka-topics.sh --create --zookeeper zoo1:2181 --replication-factor 2 --partitions 1 --topic mnet
+$ docker exec -it kf1 /kafka/kafka_2.11-2.3.0/bin/kafka-topics.sh --create --zookeeper zoo1:2181 --replication-factor 2 --partitions 1 --topic mnet_agg
 
-$ docker exec -it kf1 /kafka/kafka_2.12-2.2.0/bin/kafka-topics.sh --describe --zookeeper zoo1:2181 --topic mnet
-$ docker exec -it kf1 /kafka/kafka_2.12-2.2.0/bin/kafka-topics.sh --describe --zookeeper zoo1:2181 --topic mnet_agg
+$ docker exec -it kf1 /kafka/kafka_2.11-2.3.0/bin/kafka-topics.sh --describe --zookeeper zoo1:2181 --topic mnet
+$ docker exec -it kf1 /kafka/kafka_2.11-2.3.0/bin/kafka-topics.sh --describe --zookeeper zoo1:2181 --topic mnet_agg
 
-$ docker exec -it kf1 /kafka/kafka_2.12-2.2.0/bin/kafka-console-consumer.sh --bootstrap-server kf1:9092,kf2:9092 --topic mnet --from-beginning
-$ docker exec -it kf1 /kafka/kafka_2.12-2.2.0/bin/kafka-console-producer.sh --broker-list kf1:9092,kf2:9092 --topic mnet
+$ docker exec -it kf1 /kafka/kafka_2.11-2.3.0/bin/kafka-console-consumer.sh --bootstrap-server kf1:9092,kf2:9092 --topic mnet --from-beginning
+$ docker exec -it kf1 /kafka/kafka_2.11-2.3.0/bin/kafka-console-producer.sh --broker-list kf1:9092,kf2:9092 --topic mnet
 
-$ docker exec -it kf1 /kafka/kafka_2.12-2.2.0/bin/kafka-topics.sh --list  --zookeeper zoo1:2181
-$ docker exec -it kf1 /kafka/kafka_2.12-2.2.0/bin/kafka-topics.sh --delete --zookeeper zoo1:2181 --topic mnet 
+$ docker exec -it kf1 /kafka/kafka_2.11-2.3.0/bin/kafka-topics.sh --list  --zookeeper zoo1:2181
+$ docker exec -it kf1 /kafka/kafka_2.11-2.3.0/bin/kafka-topics.sh --delete --zookeeper zoo1:2181 --topic mnet 
 ```
 
 # Elasticsearch
@@ -150,12 +150,9 @@ $ python3 logstash_udp_client_test_dest.py
 
 # Spark
 ```
-安装包，包名对应3个Dockerfile里面的ENV，如果版本有变化，需要对应修改
-$ wget -P ./pkg http://mirrors.tuna.tsinghua.edu.cn/apache/spark/spark-2.3.3/spark-2.3.3-bin-hadoop2.7.tgz
+安装包，包名对应Dockerfile-spark-base里面的ENV，如果版本有变化，需要对应修改
+$ wget -P ./pkg http://mirrors.tuna.tsinghua.edu.cn/apache/spark/spark-2.4.4/spark-2.4.4-bin-hadoop2.7.tgz
 $ wget -P ./pkg http://mirrors.tuna.tsinghua.edu.cn/apache/hadoop/common/hadoop-2.7.7/hadoop-2.7.7.tar.gz
-
-sparksteaming jar包
-$ wget -P ./pkg https://maven.aliyun.com/repository/central/org/apache/spark/spark-streaming-kafka-0-8-assembly_2.11/2.3.3/spark-streaming-kafka-0-8-assembly_2.11-2.3.3.jar
 
 镜像
 $ docker build -t spark-base -f Dockerfile-spark-base .

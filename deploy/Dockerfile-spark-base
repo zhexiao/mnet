@@ -19,7 +19,7 @@ RUN apt-get install -y \
 	&& ln -s /usr/bin/python3 /usr/bin/python
 
 # ENV
-ENV SPARK_VERSION=spark-2.3.3-bin-hadoop2.7
+ENV SPARK_VERSION=spark-2.4.4-bin-hadoop2.7
 ENV HADOOP_VERSION=hadoop-2.7.7
 
 # 包安装
@@ -36,9 +36,6 @@ ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 ENV SPARK_HOME=/spark/${SPARK_VERSION}
 ENV HADOOP_HOME=/hadoop/${HADOOP_VERSION}
 ENV HADOOP_CONF_DIR=${HADOOP_HOME}/etc/hadoop
-
-# spark streaming 连接 kafka jar包
-COPY pkg/spark-streaming-kafka-0-8-assembly_2.11-2.3.3.jar ${SPARK_HOME}/jars/spark-streaming-kafka-0-8-assembly_2.11-2.3.3.jar
 
 # 安装pyspark
 #RUN pip3 install pyspark
