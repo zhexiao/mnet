@@ -2,7 +2,7 @@
 整套服务项目部署流程，整套操作都在deploy目录下进行。
 
 # 架构
-![image](https://github.com/zhexiao/mnet/blob/dev/deploy/arc.png?raw=true)
+![image](https://github.com/zhexiao/mnet/blob/dev/deploy/architecture.png?raw=true)
 
 # docker跨主机通信
 现有机器vm1（192.168.71.148）、vm2（192.168.71.152）和vm3（192.168.71.153）。设vm1为管理主节点，其余为工作节点。
